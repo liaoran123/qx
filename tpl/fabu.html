@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  {{template "static" .}}
+  <meta http-equiv="expires" content="2592000">
+    <!-- 引入css文件 -->
+<link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
+
+  <title>情绪管理大师</title>
+
+</head>
+<body style="font-size: 16px;">
+  <div id="home" style="max-width: 649px; margin-right: auto; margin-left: auto;">
+    {{template "header" .}}
+  
+
+
+<!-- 创建编辑容器 -->
+<div id="editor" style="height: 210px;">
+  
+</div>
+
+<!-- 引入js文件 -->
+<script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
+
+<!-- 初始化编辑器，snow主题 -->
+<script>
+ var toolbarOptions = [
+  ['bold', 'italic', 'underline', 'strike'],        // 切换按钮
+  ['blockquote', 'code-block'],
+
+  //[{ 'header': 1 }, { 'header': 2 }],               // 用户自定义按钮值
+  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+ // [{ 'script': 'sub'}, { 'script': 'super' }],      // 上标/下标
+  [{ 'indent': '-1'}, { 'indent': '+1' }],          // 减少缩进/缩进
+  //[{ 'direction': 'rtl' }],                         // 文本下划线
+
+ // [{ 'size': ['small', false, 'large', 'huge'] }],  // 用户自定义下拉
+  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+  [{ 'color': [] }, { 'background': [] }],          // 主题默认下拉，使用主题提供的值
+  //[{ 'font': [] }],
+  [{ 'align': [] }],
+
+  //['clean']                                         // 清除格式
+];
+
+var quill = new Quill('#editor', {
+  modules: {
+    toolbar: toolbarOptions
+  },
+  theme: 'snow'
+});
+
+// 提交表单
+function sub_post() {
+    var html = document.querySelector('#editor').children[0].innerHTML;
+    html = '<div class="ql-container ql-snow"><div class="ql-editor">'+html+"</div></div>";
+    $('[name=content]').val(html);
+    $("#submitForm").submit();
+}
+
+</script>
+
+  {{template "footer" .}}
+
+</body>
+
+</html>

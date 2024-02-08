@@ -1,0 +1,51 @@
+package routers
+
+import (
+	"fmt"
+	"html/template"
+	"net/http"
+)
+
+type jiage struct {
+	//req   *http.Request
+	Host string
+	Path string
+	Uri  string
+	Up   string //繁体参数 ?l=0
+	Ift  bool   //是否转繁体
+
+	Jianjies template.HTML
+}
+
+func Newjiage() jiage {
+	return jiage{}
+}
+func Jiage(w http.ResponseWriter, req *http.Request) {
+	rd := Newjiage()
+	rd.Host = "http://" + req.Host
+
+	//统计
+
+	//--组织模板数据
+	TemplatesFiles := []string{
+		"tpl/jiage.html",
+		"tpl/pub/static.html",
+		"tpl/pub/header.html",
+		"tpl/pub/search.html",
+		"tpl/pub/footer.html", // 多加的文件
+	}
+	//t, _ := template.ParseFiles(TemplatesFiles...)
+
+	funcMap := template.FuncMap{ //--需要注册的函数
+
+	}
+	t, _ := template.New("jiage.html").Funcs(funcMap).ParseFiles(TemplatesFiles...)
+	//--New("jiage.html") 的 jiage.html必须是TemplatesFiles第一个文件名
+
+	err := t.ExecuteTemplate(w, "jiage.html", rd)
+	if err != nil {
+		fmt.Println(err)
+		//WriteLog(req.URL.Path + "\n" + err.Error() + "\n" + time.Now().String())
+		fmt.Println(req.URL.Path, err)
+	}
+}

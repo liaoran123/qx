@@ -1,0 +1,49 @@
+{{define "header"}}  
+
+    <div class="text-end">     
+      <a class="badge bg-secondary" href="{{.Host}}/" >主页</a> |
+      <a class="badge bg-secondary" href="{{.Host}}/jiage/" >定价</a> | 
+        <span  id="nodenglu">
+          <a class="badge bg-secondary" href="{{.Host}}/#" >注册</a> | 
+          <a  class="badge bg-secondary" href="{{.Host}}/#">登陆</a>              
+        </span> 
+        <span  id="denglu">
+          <a  id="userurl" class="badge bg-info" href=""><b id="fahao"></b></a> |
+          <a  class="badge bg-info" href="javascript:" onclick="delcookie()">退出</a>
+        </span>        
+      </div>
+      <div class="card-header">
+        <img src="{{.Host}}/static/img/ming.jpg" /><b>情绪管理大师</b></a>        
+      </div>
+    
+<SCRIPT LANGUAGE=javascript RUNAT=Server>        
+  let id=""//".Ucook.Id}}"
+ 
+if (id=="") {
+  // if (id=="") {
+    $("#nodenglu").show()
+    $("#denglu").hide()
+  }else{
+    $("#nodenglu").hide()
+    $("#denglu").show()
+    $("#fahao").text(".Ucook.Name}}")
+    $("#userurl").attr("href","{{.Host}}/user/"+id)
+  }
+  function delcookie(){             
+    $.get("/delcookie/");                      
+    $("#nodenglu").show()
+    $("#denglu").hide()
+    alert("您已安全退出。")
+  }
+  function ft(){
+    $.ajaxSettings.async = false; //同步
+    $.get("/ft/?l=1");
+    window.location.reload()
+  }
+  function jt(){
+    $.ajaxSettings.async = false;//同步
+    $.get("/ft/?l=0");
+    window.location.reload()
+  }
+</SCRIPT>
+{{end}}
