@@ -1,12 +1,36 @@
 package aiemot
 
-//分析情绪结构
-type AnalysisEmotion struct {
-	text string
+import "fmt"
+
+//情绪词
+type Emot struct {
+	emot  string //情绪词
+	not   bool   //是否有否定
+	level int    //程度词
 }
 
-//情绪词典
+// 情绪分析模型接口
+type AnalysisEmotion interface {
+	Analysis(emot []Emot)
+}
+
+// 情绪词典
 type Dict struct {
+}
+
+//正负模型
+type Minus struct {
+	temp string
+}
+
+func (m *Minus) Analysis(emot []Emot) {
+	fmt.Printf("emot: %v\n", emot)
+}
+
+func main() {
+	minus := &Minus{}
+	var ae AnalysisEmotion = minus
+	ae.Analysis(nil)
 }
 
 /*
@@ -22,6 +46,7 @@ Step 6：找出感叹号和问好等重要的标点符合
 Step 7：计算完一条评论所有分句的情感值（[正面分值, 负面分值]），用数组（list） 记录起来。
 Step 8：计算每条评论中每一个分句的的正面情感均值与负面情感均值，然后比较正面情感总和与负面情感总和，较大的一个即为所得情感倾向。
 */
+/*
 func NewAnalysisEmotion(text string) *AnalysisEmotion {
 	return &AnalysisEmotion{
 		text: text,
@@ -30,3 +55,4 @@ func NewAnalysisEmotion(text string) *AnalysisEmotion {
 func (a *AnalysisEmotion) Aaa() {
 
 }
+*/

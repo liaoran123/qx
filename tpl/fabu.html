@@ -4,66 +4,142 @@
 <head>
   {{template "static" .}}
   <meta http-equiv="expires" content="2592000">
-    <!-- 引入css文件 -->
-<link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
+  <!-- 引入css文件 -->
+  <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
 
-  <title>情绪管理大师</title>
+  <title>发布情绪--情绪管理大师</title>
 
 </head>
+
 <body style="font-size: 16px;">
   <div id="home" style="max-width: 649px; margin-right: auto; margin-left: auto;">
     {{template "header" .}}
-  
+    <div class="card-header text-center">
+      <h3>发布情绪</h3>
+      <span>日记/心情/随笔/叙事等</span>
+    </div>
+    <div class="card-header">
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">标题</span>
+        <input type="text" class="form-control" placeholder="选填" aria-label="Username" aria-describedby="basic-addon1">
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="type-title">分类</span>
+        <select class="form-select" aria-label="Default select example">
+          <option selected>默认</option>
+          <option value="1">工作</option>
+          <option value="2">生活</option>
+          <option value="2">学习</option>
+          <option value="2">恋爱</option>
+        </select>
+        <a class="input-group-text" href="#"><img src="http://soufoshuo.com/static123/bootstrap-icons/pencil.svg"
+            width="16" height="16"></a>
+      </div>
+      <!-- 创建编辑容器 -->
+      <div id="editor" style="height: 490px;">
+        <p>内容</p>
+      </div>
+      <br>
+      <div class="mb-3 text-center">
+        <button class="btn btn-primary" type="submit">提交</button>
+      </div>
+    </div>
+    <!-- 引入js文件 -->
+    <script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
 
+    <!-- 初始化编辑器，snow主题 -->
+    <script>
+      var toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],        // 切换按钮
+        ['blockquote', 'code-block'],
 
-<!-- 创建编辑容器 -->
-<div id="editor" style="height: 210px;">
-  
-</div>
+        //[{ 'header': 1 }, { 'header': 2 }],               // 用户自定义按钮值
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        // [{ 'script': 'sub'}, { 'script': 'super' }],      // 上标/下标
+        [{ 'indent': '-1' }, { 'indent': '+1' }],          // 减少缩进/缩进
+        //[{ 'direction': 'rtl' }],                         // 文本下划线
 
-<!-- 引入js文件 -->
-<script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
+        // [{ 'size': ['small', false, 'large', 'huge'] }],  // 用户自定义下拉
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
 
-<!-- 初始化编辑器，snow主题 -->
-<script>
- var toolbarOptions = [
-  ['bold', 'italic', 'underline', 'strike'],        // 切换按钮
-  ['blockquote', 'code-block'],
+        [{ 'color': [] }, { 'background': [] }],          // 主题默认下拉，使用主题提供的值
+        //[{ 'font': [] }],
+        [{ 'align': [] }],
 
-  //[{ 'header': 1 }, { 'header': 2 }],               // 用户自定义按钮值
-  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
- // [{ 'script': 'sub'}, { 'script': 'super' }],      // 上标/下标
-  [{ 'indent': '-1'}, { 'indent': '+1' }],          // 减少缩进/缩进
-  //[{ 'direction': 'rtl' }],                         // 文本下划线
+        //['clean']                                         // 清除格式
+      ];
 
- // [{ 'size': ['small', false, 'large', 'huge'] }],  // 用户自定义下拉
-  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      var quill = new Quill('#editor', {
+        modules: {
+          toolbar: toolbarOptions
+        },
+        theme: 'snow'
+      });
 
-  [{ 'color': [] }, { 'background': [] }],          // 主题默认下拉，使用主题提供的值
-  //[{ 'font': [] }],
-  [{ 'align': [] }],
+      // 提交表单
+      function sub_post() {
+        var html = document.querySelector('#editor').children[0].innerHTML;
+        html = '<div class="ql-container ql-snow"><div class="ql-editor">' + html + "</div></div>";
+        $('[name=content]').val(html);
+        $("#submitForm").submit();
+      }
+      //提交
+      function Ins() {
+        let userid = "10000"
+        if (userid == "") {
+          alert("请先登录！")
+          return
+        }
 
-  //['clean']                                         // 清除格式
-];
+        let title = ""
+        if ($('#title').length > 0) { //判断元素是否存在
+          title = $("#title").val().trim()
+          if (title == "") {
+            alert("请输入标题。")
+            return
+          }
+        }
+        let content = ""
+        if ($('#content').length > 0) { //判断元素是否存在
+          content = $("#content").val().trim()
+          if (content == "") {
+            alert("请输入内容。")
+            return
+          }
+        }
+        let code = $("#code").val();
+        let capid = $("#check-btn").attr("data-id")
+        if (code == "" || capid == "") {
+          alert("请输入验证码。")
+          return
+        }
 
-var quill = new Quill('#editor', {
-  modules: {
-    toolbar: toolbarOptions
-  },
-  theme: 'snow'
-});
+        $.post("/a/",
+          {
+            userid: userid,
+            aid: "{{.Apply.id}}",
+            pid: "{{.Id}}",
+            classify: "2",
+            title: title,
+            content: content,
+            code: code,
+            capid: capid,
 
-// 提交表单
-function sub_post() {
-    var html = document.querySelector('#editor').children[0].innerHTML;
-    html = '<div class="ql-container ql-snow"><div class="ql-editor">'+html+"</div></div>";
-    $('[name=content]').val(html);
-    $("#submitForm").submit();
-}
+          },
+          function (result) {            
+            if (result.Succ == true) {
+              alert(result.Info)
+              window.location.href = "/art/" + result.LastId
+            } else {
+              alert(result.Info)
+              $("#code").val("")
+            }
+          }, "json");
+      }
 
-</script>
+    </script>
 
-  {{template "footer" .}}
+    {{template "footer" .}}
 
 </body>
 
