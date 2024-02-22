@@ -2,32 +2,26 @@ package db
 
 import (
 	"fmt"
-
-	"github.com/wangbin/jiebago"
 )
 
 // 对应diary表
 type Diary struct {
-	Tid     int               `json:"tid"`     //表id
-	Uid     int               `json:"Uid"`     //用户id
-	Title   string            `json:"title"`   //标题
-	Type    string            `json:"type"`    //情绪类型
-	Content string            `json:"content"` //内容
-	Dtime   string            `json:"dtime"`   //发布时间
-	play    bool              `json:"-"`       //付款状态：0,未付款；1，付款。用于统计过滤
-	seg     jiebago.Segmenter `json:"-"`
-	Kws     []*Kws            `json:"es"`
+	Tid     int    `json:"tid"`     //表id
+	Uid     int    `json:"Uid"`     //用户id
+	Title   string `json:"title"`   //标题
+	Type    string `json:"type"`    //情绪类型
+	Content string `json:"content"` //内容
+	Dtime   string `json:"dtime"`   //发布时间
+	play    bool   `json:"-"`       //付款状态：0,未付款；1，付款。用于统计过滤
+	//seg     &seg    `json:"-"`
+	Kws []*Kws `json:"es"`
 }
 
 func NewDiary() *Diary {
-	return &Diary{
-		play: false,
-	}
-}
-
-// 初始jiebago化词库
-func (d *Diary) Jbinit() {
-	d.seg.LoadDictionary("dict/jieba_sentiment.txt")
+	d := new(Diary)
+	d.play = false
+	//d.seg.LoadDictionary("dict/jieba_sentiment.txt")
+	return d
 }
 
 // 获取用户付款状态
@@ -37,12 +31,12 @@ func (d *Diary) Getpaly() bool {
 
 // 插入表
 func (d *Diary) Add(param map[string]string) bool {
+	d.Segmentation(param["text"])
 	return true
 }
 
 // 切词
 func (d *Diary) Segmentation(text string) {
-	d.Jbinit()
 	/*
 		fmt.Print("【全模式】：")
 		print(seg.CutAll("我来到北京清华大学"))
@@ -60,16 +54,15 @@ func (d *Diary) Segmentation(text string) {
 		print(seg.CutForSearch("小明硕士毕业于中国科学院计算所，后在日本京都大学深造", true))
 		//【搜索引擎模式】： 小明 / 硕士 / 毕业 / 于 / 中国 / 科学 / 学院 / 科学院 / 中国科学院 / 计算 / 计算所 / ， / 后 / 在 / 日本 / 京都 / 大学 / 日本京都大学 / 深造 /
 	*/
-	kws := d.seg.Cut(text, false)
+	kws := seg.Cut(text, false)
 	fmt.Printf("kws: %v\n", kws)
+
 	for k := range kws {
 		d.Kws = append(d.Kws, NewKws(k))
+		fmt.Printf("k: %v\n", k)
 	}
+	//fmt.Printf("d.Kws: %v\n", d.Kws)
 	fmt.Printf("kws: %v\n", kws)
-	//查找词在text中的位置
-	for _, e := range d.Kws {
-		fmt.Printf("e: %v\n", e)
-	}
 }
 
 // 修改

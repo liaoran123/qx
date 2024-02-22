@@ -26,7 +26,7 @@ func Fabu(w http.ResponseWriter, req *http.Request) {
 		"tpl/fabu.html",
 		"tpl/pub/static.html",
 		"tpl/pub/header.html",
-		"tpl/pub/search.html",
+		"tpl/pub/quill.html",
 		"tpl/pub/footer.html", // 多加的文件
 	}
 	funcMap := template.FuncMap{ //--需要注册的函数

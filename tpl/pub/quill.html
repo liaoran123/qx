@@ -1,0 +1,69 @@
+{{define "quill"}}
+<!-- 引入主题css文件 -->
+<link href="{{.Host}}/static/quill/quill.snow.css" rel="stylesheet">
+<!-- 引入js文件 -->
+<script src="{{.Host}}/static/quill/quill.js"></script>
+
+<!-- 自定义编辑器工具栏 -->
+<div id="standalone-container">
+    <div id="toolbar-container">
+        <span class="ql-formats">
+            <!--  <select class="ql-font"></select> -->
+            <select class="ql-size"></select>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+            <button class="ql-strike"></button>
+        </span>
+        <span class="ql-formats">
+            <select class="ql-color"></select>
+            <select class="ql-background"></select>
+        </span>
+        <!--
+        <span class="ql-formats">
+            <button class="ql-script" value="sub"></button>
+            <button class="ql-script" value="super"></button>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-header" value="1"></button>
+            <button class="ql-header" value="2"></button>
+            <button class="ql-blockquote"></button>
+            <button class="ql-code-block"></button>
+        </span>-->
+        <span class="ql-formats">
+            <button class="ql-list" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+            <button class="ql-indent" value="-1"></button>
+            <button class="ql-indent" value="+1"></button>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-direction" value="rtl"></button>
+            <select class="ql-align"></select>
+        </span>
+        <!-- <span class="ql-formats">
+            <button class="ql-link"></button>
+           <button class="ql-image"></button>
+            <button class="ql-video"></button>
+            <button class="ql-formula"></button>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-clean"></button>
+        </span>-->
+    </div>
+</div>
+
+<!-- 创建编辑容器 -->
+<div id="editor" class="card-body">
+    <p>内容</p>
+</div>
+
+<!-- 初始化编辑器，snow主题 -->
+<script>
+    const editor = new Quill('#editor', {
+        modules: { toolbar: '#toolbar-container' },
+        theme: 'snow'
+    });
+</script>
+{{end}}

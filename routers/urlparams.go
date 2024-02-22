@@ -49,11 +49,11 @@ func getGettData(req *http.Request) string {
 }
 
 // 将post数据转为map
-func postparas(req *http.Request) map[string]string {
+func postparams(req *http.Request) map[string]string {
 	return splitdata(getPostData(req))
 }
 
 // 将get数据转为map
-func getparas(req *http.Request) map[string]string {
+func getparams(req *http.Request) map[string]string {
 	return splitdata(getGettData(req))
 }
